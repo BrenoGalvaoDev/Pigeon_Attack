@@ -1,0 +1,19 @@
+Lore:
+- Criança sai de casa para comprar sorvete, mas é atacada por pombos e tem que sobreviver a uma chuva de fezes.
+- Deve coletar as moedas que caem dos pombos - ou o pai joga para o alto - para comprar mais sorvete e sobreviver por mais tempo.
+
+A fazer:
+-script UIManager - lembrar do botão de pause e integrar com o PlayerManager
+-script GameManager - gerir o tempo, pontuação e dificuldade avisando o WaveDirector
+-script WaveDirector - gerir a dificuldade do jogo com base na vida e na pontuação - quatidade de fezes, quantidade de pombos, velocidade dos pombos, velocidade das fezes, etc
+-fazer o sistema da vida no UIManager, e deixar o quadrado de fundo adaptativo conforme a quantidade de vida, pesquisar isso
+- script que pega o tamanho da tela e passar isso para o collider do pombo para que ele não saia da tela
+- encontrar os sprites
+- sistema de save e load
+
+
+Feito:
+-sistema de polling - fezes, pombos, vida - função de public List ListaDoObjeto() return ListaDoObjetoCriado
+-integrar polling com os pombos
+-sistema de drop das fezes no script do pombo
+-script da fisica das fezes e coletaveis
