@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Pooling : MonoBehaviour
 {
+    [SerializeField] PlayerManager playerManager;
+
     [Header("Components")]
     [SerializeField] GameObject droppingsPrefab;
     [SerializeField] int droppingsAmount;
@@ -39,9 +41,19 @@ public class Pooling : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             GameObject newObj = Instantiate(obj);
-            newObj.SetActive(false);
+            
+            if(newObj.GetComponent<ObjMove>() != null)
+            {
+                newObj.GetComponent<ObjMove>().playerManager = playerManager;
+            }
+            if(newObj.GetComponent<Pigeon>() != null)
+            {
+                newObj.GetComponent<Pigeon>().playerManager = playerManager;
+            }
             newObj.transform.SetParent(container);
             poolDictionary[name].Add(newObj);
+
+            newObj.SetActive(false);
         }
     }
 

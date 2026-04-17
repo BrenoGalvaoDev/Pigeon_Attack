@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Pigeon : MonoBehaviour
@@ -21,20 +22,26 @@ public class Pigeon : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
 
+    public PlayerManager playerManager;
+
     private void OnEnable()
     {
-        GameManager.Instance._playerManager.OnPauseGame += (bool value) => isPaused = value;
-        GameManager.Instance._playerManager.OnGameOver += () => isPaused = true;
+        playerManager.OnPauseGame += (bool value) => isPaused = value;    
+        playerManager.OnGameOver += () => isPaused = true;
     }
     private void OnDisable()
     {
-        GameManager.Instance._playerManager.OnPauseGame -= (bool value) => isPaused = value;
-        GameManager.Instance._playerManager.OnGameOver -= () => isPaused = true;
+        playerManager.OnPauseGame -= (bool value) => isPaused = value;
+        playerManager.OnGameOver -= () => isPaused = true;
     }
 
     void Start()
     {
+        playerManager = GameManager.Instance._playerManager;
+
         spriteRenderer = GetComponent<SpriteRenderer>();
+        pooling = FindObjectOfType<Pooling>();
+        collider2 = GameObject.Find("Collider Pigeon").GetComponent<Collider2D>();
 
         GetDroppings();
         targetPoint = GetRandomPoint();
@@ -57,7 +64,7 @@ public class Pigeon : MonoBehaviour
         }
 
         transform.position = Vector2.MoveTowards(transform.position, targetPoint, speed * Time.deltaTime);
-        spriteRenderer.flipX = targetPoint.x < transform.position.x;
+        spriteRenderer.flipX = targetPoint.x > transform.position.x;
     }
 
     Vector2 GetRandomPoint()

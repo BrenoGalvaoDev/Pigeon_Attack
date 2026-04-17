@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,11 @@ public class PigeonsSpawnManager : MonoBehaviour
     [SerializeField] Pooling pooling;
     [SerializeField] Collider2D collider2;
 
-    List<GameObject> collectibles = new List<GameObject>();
+    List<GameObject> pigeons = new List<GameObject>();
+
+    int pigeonAmountInScene;
+
+    public Action<int> OnPigeonsAmountChanged;
 
     private void Start()
     {
@@ -16,31 +21,55 @@ public class PigeonsSpawnManager : MonoBehaviour
 
     public void SpawnPigeon()
     {
-        GameObject pigeon = GetCollectible();
+        GameObject pigeon = GetInativePigeon();
         if (pigeon != null)
         {
             pigeon.transform.position = GetRandomPosition();
             pigeon.SetActive(true);
+            pigeonAmountInScene++;
+            OnPigeonsAmountChanged?.Invoke(pigeonAmountInScene);
         }
     }
 
     void GetList()
     {
-        collectibles.Clear();
+        pigeons.Clear();
 
-        collectibles = pooling.ObjectPool("pigeon");
+        pigeons = pooling.ObjectPool("pigeon");
     }
 
-    GameObject GetCollectible()
+    GameObject GetInativePigeon()
     {
-        return collectibles.Find(obj => !obj.activeInHierarchy);
+        return pigeons.Find(obj => !obj.activeInHierarchy);
+    }
+
+    GameObject GetAtivePigeon()
+    {
+        return pigeons.Find(obj => obj.activeInHierarchy);
     }
 
     Vector2 GetRandomPosition()
     {
         Bounds bounds = collider2.bounds;
-        float x = Random.Range(bounds.min.x, bounds.max.x);
-        float y = Random.Range(bounds.min.y, bounds.max.y);
+        float x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x); //usando UnityEngine.Random para não gerar error de ambiguidade com System.Random
+        float y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);
         return new Vector2(x, y);
     }
+
+    public bool CanSpawnPigeon()
+    {
+        return GetInativePigeon() != null;  // Tem pombo inativo no pool
+    }
+
+    public void DespawnRandomPigeon()
+    {
+        GameObject activePigeon = pigeons.Find(obj => obj.activeInHierarchy);
+        if (activePigeon != null)
+        {
+            activePigeon.SetActive(false);
+            pigeonAmountInScene--;
+            OnPigeonsAmountChanged?.Invoke(pigeonAmountInScene);
+        }
+    }
+
 }

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [Header("Components")]
     [SerializeField] GameManager gameManager;
     [SerializeField] PlayerManager playerManager;
+    [SerializeField] PlayerLife playerLife;
 
     [Header("UI Elements")]
     [SerializeField] Text ScoreTxt;
@@ -17,6 +18,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject GameOverPanel;
     [SerializeField] GameObject PausePanel;
+
+    [Header("Life Image System")]
+    [SerializeField] Image[] maxLifeImages;
+    [SerializeField] Image[] fullLifeImages;
 
 
     #region DATA
@@ -44,12 +49,16 @@ public class UIManager : MonoBehaviour
         playerManager.OnCollectedCoin += UpdateCoinTxt;
         playerManager.OnGameOver += () => GameOverPanel.SetActive(true);
         playerManager.OnPauseGame += (bool value) => PausePanel.SetActive(value);
+
+        playerLife.OnHealthChanged += UpdateLifeImages;
     }
     private void OnDisable()
     {
         playerManager.OnCollectedCoin -= UpdateCoinTxt;
         playerManager.OnGameOver -= () => GameOverPanel.SetActive(true);
         playerManager.OnPauseGame -= (bool value) => PausePanel.SetActive(value);
+
+        playerLife.OnHealthChanged -= UpdateLifeImages;
     }
 
     #endregion
@@ -67,5 +76,16 @@ public class UIManager : MonoBehaviour
         CoinTxt.text = coinAmount.ToString();
     }
 
+    #endregion
+
+    #region Life System
+    public void UpdateLifeImages(int currentHealth, int maxHealth)
+    {
+        for (int i = 0; i < maxLifeImages.Length; i++)
+        {
+            maxLifeImages[i].enabled = i < maxHealth;
+            fullLifeImages[i].enabled = i < currentHealth;
+        }
+    }
     #endregion
 }

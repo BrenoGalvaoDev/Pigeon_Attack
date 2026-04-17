@@ -13,9 +13,9 @@ public class ObjMove : MonoBehaviour
 
     bool isPaused;
 
-    private void Awake()
+    private void Start()
     {
-        playerManager = GameManager.Instance._playerManager;
+        playerManager = GameObject.Find("Player").GetComponent<PlayerManager>();
     }
 
     private void OnEnable()
@@ -39,15 +39,27 @@ public class ObjMove : MonoBehaviour
 
         if (t >= timeToLive)
         {
-            t = 0f;
-            gameObject.SetActive(false);
+            DesactiveObj();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player"))
+        {
+            DesactiveObj();
         }
     }
 
     private void OnBecameInvisible()
     {
+        DesactiveObj();
+    }
+
+    void DesactiveObj()
+    {
         t = 0f;
-        
+
         gameObject.SetActive(false);
     }
 }

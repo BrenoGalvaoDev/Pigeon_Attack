@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -105,5 +106,23 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateScoreTxt(score, maxScore);
     }
 
+    #endregion
+
+    #region SCENE MANAGEMENT
+
+    public void LoadSceneAsync(string sceneName)
+    {
+        StartCoroutine(LoadSceneCoroutine(sceneName));
+    }
+
+    private IEnumerator LoadSceneCoroutine(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
     #endregion
 }

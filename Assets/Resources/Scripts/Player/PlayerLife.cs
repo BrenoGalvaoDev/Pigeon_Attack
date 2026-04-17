@@ -28,6 +28,8 @@ public class PlayerLife : MonoBehaviour
     {
         maxHealth += value;
         currentHealth = maxHealth;
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
 
@@ -56,11 +58,15 @@ public class PlayerLife : MonoBehaviour
             OnPlayerTakeHit?.Invoke();
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
+            Debug.Log("Player took hit, current health: " + currentHealth);
+
             StartCoroutine(Invincibility());
         }
         else
         {
             Death();
+            Debug.Log("Player Dead");
+
         }
     }
 

@@ -5,10 +5,20 @@ using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMove), typeof(PlayerLife))]
+public enum PlayerState
+{
+    Idle,
+    Moving,
+    Hurt,
+    Dead
+}
+
+[RequireComponent(typeof(PlayerMove), typeof(PlayerLife), typeof(PlayerAnimator))]
 
 public class PlayerManager : MonoBehaviour
 {
+    PlayerState currentState;
+
     [Header("Player Settings")]
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] int   inicialLife = 5;
@@ -17,9 +27,9 @@ public class PlayerManager : MonoBehaviour
 
     #region Components
 
-    PlayerMove pMove;
-    PlayerLife pLife;
-
+    PlayerMove     pMove;
+    PlayerLife     pLife;
+    PlayerAnimator pAnim;
 
     //BOOLS 
     bool isGameOver, isPaused;
@@ -36,10 +46,12 @@ public class PlayerManager : MonoBehaviour
     private void OnEnable()
     {
         pLife.OnPlayerDeath += GameOver;
+        pLife.OnPlayerTakeHit += TakeHit;
     }
     private void OnDisable()
     {
         pLife.OnPlayerDeath -= GameOver;
+        pLife.OnPlayerTakeHit -= TakeHit;
     }
     #endregion
 
@@ -49,12 +61,22 @@ public class PlayerManager : MonoBehaviour
     {
         pMove = GetComponent<PlayerMove>();
         pLife = GetComponent<PlayerLife>();
+        pAnim = GetComponent<PlayerAnimator>();
+
+        currentState = PlayerState.Idle;
     }
 
     private void Start()
     {
         SetMoveSpeed();
         SetMaxLife();
+    }
+
+    private void Update()
+    {
+        if (currentState == PlayerState.Dead) return;
+
+        UpdateState();
     }
 
     #endregion
@@ -84,6 +106,7 @@ public class PlayerManager : MonoBehaviour
     void GameOver()
     {
         isGameOver = true;
+        ChangeState(PlayerState.Dead);
         OnGameOver?.Invoke();
     }
 
@@ -105,4 +128,43 @@ public class PlayerManager : MonoBehaviour
     }
 
     #endregion
+
+    #region STATE MANAGER
+
+    void UpdateState()
+    {
+        if (currentState == PlayerState.Hurt) return;
+
+        bool isMoving = pMove.MoveDirection.x != 0;
+        PlayerState newState = isMoving ? PlayerState.Moving : PlayerState.Idle;
+
+        if (newState != currentState)
+        {
+            ChangeState(newState);
+        }
+    }
+
+    void ChangeState(PlayerState state)
+    {
+        currentState = state;
+        pAnim.SetAnimation(currentState);
+    }
+
+    void TakeHit()
+    {
+        ChangeState(PlayerState.Hurt);
+
+        StartCoroutine(ResetState(1f));
+    }
+
+    IEnumerator ResetState(float timer)
+    {
+        yield return new WaitForSeconds(timer);
+
+        currentState = PlayerState.Idle;
+        ChangeState(currentState);
+    }
+
+    #endregion
+
 }

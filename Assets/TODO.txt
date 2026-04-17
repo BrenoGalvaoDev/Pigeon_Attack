@@ -3,6 +3,31 @@ Lore:
 - Deve coletar as moedas que caem dos pombos - ou o pai joga para o alto - para comprar mais sorvete e sobreviver por mais tempo.
 
 A fazer:
+
+
+
++++ PRIORIDADE MAXIMA DESCOBRIR O ERRO QUE DA QUANDO OS OBJETOS SPAWNAM, PARECE QUE NÃO ESTÃO RECEBENDO O PLAYERMANAGER DO JEITO CERTO+++
+
++++ PRIORIDADE MAXIMA DESCOBRIR O ERRO QUE DA QUANDO OS OBJETOS SPAWNAM, PARECE QUE NÃO ESTÃO RECEBENDO O PLAYERMANAGER DO JEITO CERTO+++
+
++++ PRIORIDADE MAXIMA DESCOBRIR O ERRO QUE DA QUANDO OS OBJETOS SPAWNAM, PARECE QUE NÃO ESTÃO RECEBENDO O PLAYERMANAGER DO JEITO CERTO+++
+
++++ PRIORIDADE MAXIMA DESCOBRIR O ERRO QUE DA QUANDO OS OBJETOS SPAWNAM, PARECE QUE NÃO ESTÃO RECEBENDO O PLAYERMANAGER DO JEITO CERTO+++
+
+
+
++++ PRIORIDADE ALTA VERIFICAR SISTEMA DE VIDA QUE ESTÁ CRACHANDO +++
+
++++ PRIORIDADE ALTA VERIFICAR SISTEMA DE VIDA QUE ESTÁ CRACHANDO +++
+
++++ PRIORIDADE ALTA VERIFICAR SISTEMA DE VIDA QUE ESTÁ CRACHANDO +++
+
+
+
+
+
+///////////////////////////////////////// IGNORAR ISSO ABAIXO /////////////////////////////////////////
+
 -script UIManager - lembrar do botão de pause e integrar com o PlayerManager
 -script GameManager - gerir o tempo, pontuação e dificuldade avisando o WaveDirector
 -script WaveDirector - gerir a dificuldade do jogo com base na vida e na pontuação - quatidade de fezes, quantidade de pombos, velocidade dos pombos, velocidade das fezes, etc
@@ -17,3 +42,7 @@ Feito:
 -integrar polling com os pombos
 -sistema de drop das fezes no script do pombo
 -script da fisica das fezes e coletaveis
+
+
+OBS:
+- ERRO QUE DA QUANDO OS OBJETOS SPAWNAM -- era somente deixar o objeto desativano por padrão, e ativar ele quando for spawnar, assim o player manager é atribuido normalmente e não da mais erro. O erro era: NullReferenceException: Object reference not set to an instance of an object

@@ -11,26 +11,34 @@ public class PlayerMove : MonoBehaviour
 
     //Components
     PlayerManager pManager;
+    PlayerLife pLife;
     Rigidbody2D rb;
     Vector2 moveDirection;
+    SpriteRenderer spriteRenderer;
 
     public bool canWalk = true;
+
+    public Vector2 MoveDirection { get => moveDirection; set => moveDirection = value; }
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         pManager = GetComponent<PlayerManager>();
+        pLife = GetComponent<PlayerLife>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
         pManager.OnPauseGame += PauseGame;
         pManager.OnGameOver += GameOver;
+        pLife.OnPlayerTakeHit += () => StartCoroutine(TakeHit());
     }
     private void OnDisable()
     {
         pManager.OnPauseGame -= PauseGame;
         pManager.OnGameOver -= GameOver;
+        pLife.OnPlayerTakeHit -= () => StartCoroutine(TakeHit());
     }
 
     void FixedUpdate()
@@ -51,6 +59,7 @@ public class PlayerMove : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
         }
+        spriteRenderer.flipX = moveDirection.x < 0 ? true : moveDirection.x > 0 ? false : spriteRenderer.flipX;
     }
 
     public void SetMoveInputDirection(InputAction.CallbackContext value)
@@ -73,6 +82,15 @@ public class PlayerMove : MonoBehaviour
     void GameOver() { canWalk = false; rb.velocity = Vector2.zero; }
 
     public void PlayerMovement(float value) { moveSpeed = value; }
+
+    IEnumerator TakeHit()
+    {
+        canWalk = false;
+        rb.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(1f);
+        canWalk = true; 
+    }
 
     #endregion
 }
